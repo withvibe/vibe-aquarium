@@ -21,12 +21,41 @@ npm run dev
 
 ## Run in Docker
 
+Copy the env template first:
+
 ```bash
-docker compose up --build
-# http://localhost:3000
+cp .env.example .env
+# edit values as needed
 ```
 
-State persists in the `aquarium-data` volume.
+### Standalone mode (local / single instance)
+
+```bash
+docker compose up --build
+# http://localhost:3000  (or whatever PORT you set in .env)
+```
+
+### Traefik mode (per-client sandboxes behind a reverse proxy)
+
+Each client gets their own deployment, each on its own subdomain, all
+routed by a shared Traefik instance. Pre-reqs on the host:
+
+```bash
+# one-time: create the shared network Traefik listens on
+docker network create traefik
+# (and have a Traefik container running on that network)
+```
+
+Then per client, set `CLIENT_ID` and `HOSTNAME` in `.env` and run:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
+```
+
+The overlay strips the host port (`ports: !reset []`) so only Traefik
+talks to the container, and adds the routing labels driven by `.env`.
+
+State persists in the `aquarium-data` named volume per project directory.
 
 ## Project shape
 

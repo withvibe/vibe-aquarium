@@ -1,0 +1,21 @@
+services:
+  aquarium:
+    ports: !reset []
+    expose:
+      - "3000"
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik}"
+      - "traefik.http.routers.${CLIENT_ID:?CLIENT_ID required for Traefik mode}.rule=Host(`${HOSTNAME:?HOSTNAME required for Traefik mode}`)"
+      - "traefik.http.routers.${CLIENT_ID}.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}"
+      - "traefik.http.routers.${CLIENT_ID}.tls=true"
+      - "traefik.http.routers.${CLIENT_ID}.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.services.${CLIENT_ID}.loadbalancer.server.port=3000"
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik}
