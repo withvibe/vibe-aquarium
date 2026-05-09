@@ -31,6 +31,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/better-sqlite3 ./node_modules/better-sqlite3
 
+# Bind Next.js standalone server to all interfaces. Docker auto-sets
+# HOSTNAME to the container ID, which Next.js then uses as the bind
+# address — that resolves to only one network when the container is on
+# multiple Docker networks (e.g. behind Traefik with proxy + internal
+# networks), causing reverse-proxy 502s.
+ENV HOSTNAME=0.0.0.0
+
 USER nextjs
 EXPOSE 3000
 VOLUME ["/app/data"]
