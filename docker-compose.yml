@@ -1,7 +1,6 @@
 services:
   aquarium:
     build: .
-    container_name: vibe-aquarium
     ports:
       - "${PORT:-3000}:3000"
     environment:
