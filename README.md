@@ -21,41 +21,21 @@ npm run dev
 
 ## Run in Docker
 
-Copy the env template first:
-
-```bash
-cp .env.example .env
-# edit values as needed
-```
-
-### Standalone mode (local / single instance)
-
 ```bash
 docker compose up --build
-# http://localhost:3000  (or whatever PORT you set in .env)
+# http://localhost:3000
 ```
 
-### Traefik mode (per-client sandboxes behind a reverse proxy)
+To run on a different host port, set `PORT` in `.env` (see `.env.example`).
+State persists in the `aquarium-data` named volume.
 
-Each client gets their own deployment, each on its own subdomain, all
-routed by a shared Traefik instance. Pre-reqs on the host:
+## Deploying with WithVibe
 
-```bash
-# one-time: create the shared network Traefik listens on
-docker network create traefik
-# (and have a Traefik container running on that network)
-```
-
-Then per client, set `CLIENT_ID` and `HOSTNAME` in `.env` and run:
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
-```
-
-The overlay strips the host port (`ports: !reset []`) so only Traefik
-talks to the container, and adds the routing labels driven by `.env`.
-
-State persists in the `aquarium-data` named volume per project directory.
+This template is designed to be deployed by WithVibe. The platform's
+compose-rewriter handles per-env subdomain routing automatically — it
+strips host ports, attaches the service to its proxy network, and
+generates the right `Host(...)` Traefik labels per env. The template
+itself declares zero variables; the platform injects what it needs.
 
 ## Project shape
 

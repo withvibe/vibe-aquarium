@@ -1,7 +1,7 @@
 services:
   aquarium:
     build: .
-    container_name: ${CLIENT_ID:-vibe-aquarium}
+    container_name: vibe-aquarium
     ports:
       - "${PORT:-3000}:3000"
     environment:
