@@ -1,0 +1,11 @@
+services:
+  aquarium:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - aquarium-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  aquarium-data:
