@@ -59,3 +59,7 @@ src/
 - "Give every fish a name tag"
 - "Add bubbles rising from the floor"
 - "Let visitors click a fish to rename it"
+
+## License
+
+[Apache License 2.0](LICENSE). Built by [WithVibe](https://withvibe.dev).
